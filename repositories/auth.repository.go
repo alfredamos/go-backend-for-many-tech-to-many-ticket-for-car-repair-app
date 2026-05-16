@@ -26,7 +26,7 @@ type UserAuthRepoImpl struct {
 	DB *gorm.DB
 }
 
-func NewUserAuthRepoImpl(DB *gorm.DB) UserAuthRepoInt {
+func NewUserAuthRepoImpl(DB *gorm.DB) *UserAuthRepoImpl {
 	return &UserAuthRepoImpl{DB: DB}
 }
 
@@ -145,6 +145,7 @@ func (u UserAuthRepoImpl) EditUserProfile(request models.EditUserProfileRequest)
 
 	//----> Update user profile.
 	userToEdit.ID = user.ID
+	userToEdit.CreatedAt = user.CreatedAt
 	if err := u.DB.Save(userToEdit).Error; err != nil {
 		return errors.New(err.Error())
 	}

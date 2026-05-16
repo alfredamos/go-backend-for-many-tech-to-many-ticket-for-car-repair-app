@@ -33,7 +33,7 @@ func main() {
 	}
 
 	//----> AutoMigrate all models, including the custom join table
-	err = DB.AutoMigrate(&models.AssignedTicket{}, &models.Customer{}, &models.Technician{}, &models.Ticket{}, &models.Token{}, &models.User{})
+	err = DB.AutoMigrate(&models.User{}, &models.AssignedTicket{}, &models.Customer{}, &models.Technician{}, &models.Ticket{}, &models.Token{})
 
 	if err != nil {
 		log.Fatal(err)

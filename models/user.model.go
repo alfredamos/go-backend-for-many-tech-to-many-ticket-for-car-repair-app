@@ -8,18 +8,18 @@ import (
 )
 
 type User struct {
-	ID          string `json:"id" gorm:"primaryKey;type:varchar(255)"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
-	Name        string         `validate:"required" json:"name"`
-	Password    string         `validate:"required" json:"password"`
-	Phone       string         `validate:"required" json:"phone"`
-	Email       string         `validate:"required,email" json:"email" gorm:"unique"`
-	Role        Role           `validate:"required,role" json:"role"`
-	Gender      Gender         `validate:"required,gender" json:"gender"`
-	Image       string         `validate:"required,image" json:"image"`
-	DateOfBirth time.Time      `json:"dateOfBirth" validate:"required"`
+	ID        string `json:"id" gorm:"primaryKey;type:varchar(255)"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Name      string         `validate:"required" json:"name"`
+	Password  string         `validate:"required" json:"password"`
+	Phone     string         `validate:"required" json:"phone"`
+	Email     string         `validate:"required,email" json:"email" gorm:"unique"`
+	Role      Role           `validate:"required,role" json:"role"`
+	Gender    Gender         `validate:"required,gender" json:"gender"`
+	Image     string         `validate:"required,image" json:"image"`
+	Type      UserType       `gorm:"type:varchar(20);default:'Customer'" json:"type"`
 
 	Tokens     []Token    `json:"tokens" gorm:"foreignKey:UserID"`
 	Customer   Customer   `json:"customer" gorm:"foreignKey:UserID"`

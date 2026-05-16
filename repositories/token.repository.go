@@ -19,7 +19,7 @@ type TokenRepositoryImpl struct {
 	DB *gorm.DB
 }
 
-func NewTokenRepositoryImpl(DB *gorm.DB) TokenRepositoryInt {
+func NewTokenRepositoryImpl(DB *gorm.DB) *TokenRepositoryImpl {
 	return &TokenRepositoryImpl{DB: DB}
 }
 

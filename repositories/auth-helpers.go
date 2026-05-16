@@ -105,6 +105,7 @@ func fromEditUserProfileToUser(editUserProfile *models.EditUserProfileRequest, u
 		Image:    editUserProfile.Image,
 		Role:     user.Role,
 		Password: user.Password,
+		Type:     user.Type,
 	}
 }
 
@@ -116,6 +117,7 @@ func fromSignupUserToUser(signupUser *models.SignupUserRequest) *models.User {
 		Gender:   signupUser.Gender,
 		Image:    signupUser.Image,
 		Password: signupUser.Password,
+		Type:     signupUser.Type,
 		Role:     models.UserRole,
 	}
 }

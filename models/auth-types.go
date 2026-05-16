@@ -76,22 +76,24 @@ type LoginUserRequest struct {
 }
 
 type EditUserProfileRequest struct {
-	Name     string `validate:"required" json:"name"`
-	Password string `validate:"required" json:"password"`
-	Phone    string `validate:"required" json:"phone"`
-	Email    string `validate:"required,email" json:"email"`
-	Role     Role   `json:"role" default:"User"`
-	Gender   Gender `validate:"required,oneof=Female Male" json:"gender"`
-	Image    string `validate:"required" json:"image"`
+	Name     string   `validate:"required" json:"name"`
+	Password string   `validate:"required" json:"password"`
+	Phone    string   `validate:"required" json:"phone"`
+	Email    string   `validate:"required,email" json:"email"`
+	Role     Role     `json:"role" default:"User"`
+	Gender   Gender   `validate:"required,oneof=Female Male" json:"gender"`
+	Image    string   `validate:"required" json:"image"`
+	Type     UserType `gorm:"type:varchar(20);default:'customer'" json:"type"`
 }
 
 type SignupUserRequest struct {
-	Name            string `validate:"required" json:"name"`
-	Email           string `validate:"required,email" json:"email"`
-	Password        string `validate:"required" json:"password"`
-	ConfirmPassword string `validate:"required" json:"confirmPassword"`
-	Phone           string `validate:"required" json:"phone"`
-	Role            Role   `json:"role"`
-	Gender          Gender `validate:"required,oneof=Female Male" json:"gender"`
-	Image           string `validate:"required" json:"image"`
+	Name            string   `validate:"required" json:"name"`
+	Email           string   `validate:"required,email" json:"email"`
+	Password        string   `validate:"required" json:"password"`
+	ConfirmPassword string   `validate:"required" json:"confirmPassword"`
+	Phone           string   `validate:"required" json:"phone"`
+	Role            Role     `json:"role"`
+	Gender          Gender   `validate:"required,oneof=Female Male" json:"gender"`
+	Image           string   `validate:"required" json:"image"`
+	Type            UserType `gorm:"type:varchar(20);default:'Customer'" json:"type"`
 }

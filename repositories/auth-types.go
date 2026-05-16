@@ -32,14 +32,15 @@ type LoginUserRequest struct {
 }
 
 type SignupUserRequest struct {
-	Name            string        `validate:"required" json:"name"`
-	Email           string        `validate:"required,email" json:"email"`
-	Password        string        `validate:"required" json:"password"`
-	ConfirmPassword string        `validate:"required" json:"confirmPassword"`
-	Phone           string        `validate:"required" json:"phone"`
-	Role            models.Role   `json:"role"`
-	Gender          models.Gender `validate:"required,oneof=Female Male" json:"gender"`
-	Image           string        `validate:"required" json:"image"`
+	Name            string          `validate:"required" json:"name"`
+	Email           string          `validate:"required,email" json:"email"`
+	Password        string          `validate:"required" json:"password"`
+	ConfirmPassword string          `validate:"required" json:"confirmPassword"`
+	Phone           string          `validate:"required" json:"phone"`
+	Role            models.Role     `json:"role"`
+	Gender          models.Gender   `validate:"required,oneof=Female Male" json:"gender"`
+	Image           string          `validate:"required" json:"image"`
+	Type            models.UserType `json:"type" validate:"required,oneof=Customer Technician" json:"type"`
 }
 
 type UserResponse struct {
@@ -73,7 +74,7 @@ func ToUserResponse(user *models.User) *UserResponse {
 func ToUsers(users []*models.User) []*UserResponse {
 	var userResponses []*UserResponse
 	for _, user := range users {
-		userResponses = append(userResponses, ToUser(user))
+		userResponses = append(userResponses, ToUserResponse(user))
 	}
 	return userResponses
 }
