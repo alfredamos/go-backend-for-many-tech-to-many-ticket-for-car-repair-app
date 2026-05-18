@@ -49,7 +49,7 @@ func (c *CustomerServiceImpl) CreateCustomer(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&customerCreate); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Create customer.
@@ -90,7 +90,7 @@ func (c *CustomerServiceImpl) EditCustomerById(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&customerEdit); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Edit the customer with the giving id.

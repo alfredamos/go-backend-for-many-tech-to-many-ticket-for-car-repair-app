@@ -12,6 +12,10 @@ func CustomerRoute(router fiber.Router, customerController controllers.CustomerC
 	customerProtecRoute := router.Use(middleware.VerifyTokenJwt)
 	customerProtecRoute.Get("/:id", customerController.GetCustomerByIdController)
 
+	//----> Owner protected routes.
+	customerOwnerRoute := router.Use(middleware.VerifyTokenJwt, middleware.OwnerByUserIdOrAdmin)
+	customerOwnerRoute.Get("/owner/:id", customerController.GetCustomerByIdController)
+
 	//----> Admin protected routes.
 	customerAdminRoute := router.Use(middleware.VerifyTokenJwt, middleware.AdminRolePermission)
 
@@ -22,5 +26,5 @@ func CustomerRoute(router fiber.Router, customerController controllers.CustomerC
 	customerAdminRoute.Get("/", customerController.GetAllCustomersController)
 	customerAdminRoute.Get("/all/active", customerController.GetActiveCustomersController)
 	customerAdminRoute.Get("/all/inactive", customerController.GetInactiveCustomersController)
-	customerAdminRoute.Get("/by-user-id/:userId", customerController.GetCustomerByUserIdController)
+
 }

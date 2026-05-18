@@ -8,8 +8,9 @@ import (
 )
 
 func TechnicianRoute(router fiber.Router, ca *controllers.TechnicianControllerImpl) {
-	//----> Technician protected routes.
-	//techProtectedRoute := router.Use(middleware.VerifyTokenJwt)
+	//----> Owner protected routes.
+	technicianOwnerRoute := router.Use(middleware.VerifyTokenJwt, middleware.OwnerByUserIdOrAdmin)
+	technicianOwnerRoute.Get("/by-user-id/:userId", ca.GetTechnicianByUserIdController)
 
 	//----> Admin protected routes.
 	adminProtectedRoute := router.Use(middleware.VerifyTokenJwt, middleware.AdminRolePermission)
@@ -18,7 +19,6 @@ func TechnicianRoute(router fiber.Router, ca *controllers.TechnicianControllerIm
 	adminProtectedRoute.Patch("/:id", ca.EditTechnicianByIdController)
 	adminProtectedRoute.Get("/", ca.GetAllTechniciansController)
 	adminProtectedRoute.Get("/:id", ca.GetTechnicianByIdController)
-	adminProtectedRoute.Get("/by-user-id/:userId", ca.GetTechnicianByUserIdController)
 	adminProtectedRoute.Get("/by-specialty/:specialty", ca.GetTechniciansBySpecialtyController)
 
 }

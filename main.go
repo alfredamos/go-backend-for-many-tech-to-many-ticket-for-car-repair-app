@@ -85,7 +85,18 @@ func main() {
 	TechnicianRoutes := app.Group("/api/technicians")
 	routes.TechnicianRoute(TechnicianRoutes, technicianController)
 
+	//----> Initialize ticket repository.
+	ticketRepo := repositories.NewTicketRepositoryImpl(DB)
+
+	//----> Initialize ticket service.
+	ticketService := services.NewTicketServiceImpl(ticketRepo)
+
+	//----> Initialize ticket controller.
+	ticketController := controllers.NewTicketControllerImpl(ticketService)
+
 	//----> Ticket routes.
+	ticketRoutes := app.Group("/api/tickets")
+	routes.TicketRoute(ticketRoutes, ticketController)
 
 	//----> Initialize token repository.
 	tokenRepo := repositories.NewTokenRepositoryImpl(DB)

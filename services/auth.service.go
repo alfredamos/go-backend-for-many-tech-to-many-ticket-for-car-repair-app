@@ -1,7 +1,6 @@
 package services
 
 import (
-	"errors"
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/models"
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/repositories"
 
@@ -34,7 +33,7 @@ func (a AuthServiceImpl) ChangeUserPassword(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&request); err != nil {
-		return errors.New(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Change user password.
@@ -53,7 +52,7 @@ func (a AuthServiceImpl) ChangeUserRole(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&request); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Change user role.
@@ -74,7 +73,7 @@ func (a AuthServiceImpl) EditUserProfile(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&request); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Edit user profile.
@@ -119,7 +118,7 @@ func (a AuthServiceImpl) LoginUser(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&request); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Login user.
@@ -166,7 +165,7 @@ func (a AuthServiceImpl) SignupUser(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&request); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Signup user.

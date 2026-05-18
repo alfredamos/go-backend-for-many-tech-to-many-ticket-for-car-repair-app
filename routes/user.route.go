@@ -10,9 +10,12 @@ import (
 func UserRoute(router fiber.Router, userController controllers.UserControllerInt) {
 	//----> User protected routes.
 	userProtecRoute := router.Use(middleware.VerifyTokenJwt)
-	userProtecRoute.Delete("/:id", userController.DeleteUserByIdController)
-	userProtecRoute.Get("/:id", userController.GetUserByIdController)
 	userProtecRoute.Get("/by-email/:email", userController.GetUserByEmailController)
+
+	//----> Owner protected routes.
+	userOwnerRoute := router.Use(middleware.VerifyTokenJwt, middleware.OwnerByIdOrAdmin)
+	userOwnerRoute.Delete("/:id", userController.DeleteUserByIdController)
+	userOwnerRoute.Get("/:id", userController.GetUserByIdController)
 
 	//----> Admin protected routes.
 	userAdminRoute := router.Use(middleware.VerifyTokenJwt, middleware.AdminRolePermission)

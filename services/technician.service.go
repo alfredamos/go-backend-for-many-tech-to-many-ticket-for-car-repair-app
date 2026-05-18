@@ -31,7 +31,7 @@ func (t *TechnicianServiceImpl) CreateTechnician(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&technicianCreate); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Create technician.
@@ -71,7 +71,7 @@ func (t *TechnicianServiceImpl) EditTechnicianById(ctx *fiber.Ctx) error {
 
 	//----> Get the request payload.
 	if err := ctx.BodyParser(&technicianEdit); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	//----> Edit the technician with the giving id.

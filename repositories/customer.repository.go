@@ -146,7 +146,7 @@ func (c *CustomerRepositoryImpl) EditCustomerById(id string, customerEdit *model
 	}
 
 	//----> Update customer.
-	if err := c.DB.Model(&models.Customer{}).Where("id = ?", id).Updates(&customerToEdit).Error; err != nil {
+	if err := c.DB.Model(customerEdit).Where("id = ?", id).Updates(&customerToEdit).Error; err != nil {
 		return CustomerResponse{}, errors.New(err.Error())
 	}
 

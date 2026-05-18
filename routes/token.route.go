@@ -9,8 +9,8 @@ import (
 
 func TokenRoute(router fiber.Router, tokenController controllers.TokenControllerInt) {
 	//----> Delete invalid tokens by user id.
-	tokenAuthenticated := router.Use(middleware.VerifyTokenJwt)
-	tokenAuthenticated.Delete("/delete-by-user-id/:userId", tokenController.DeleteInvalidTokensByUserIdController)
+	tokenOwnershipRoute := router.Use(middleware.VerifyTokenJwt, middleware.OwnerByUserIdOrAdmin)
+	tokenOwnershipRoute.Delete("/delete-by-user-id/:userId", tokenController.DeleteInvalidTokensByUserIdController)
 
 	//----> Delete all invalid tokens, admin only.
 	tokenAdminAuthorized := router.Use(middleware.VerifyTokenJwt, middleware.AdminRolePermission)
