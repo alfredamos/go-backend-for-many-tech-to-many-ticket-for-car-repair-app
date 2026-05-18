@@ -277,7 +277,7 @@ func (u UserAuthRepoImpl) SignupUser(request models.SignupUserRequest) error {
 
 	//----> Check for existing user.
 	user := new(models.User)
-	if err := u.DB.First(&user, "email = ?", request.Email).Error; err == nil {
+	if err := u.DB.Where("email = ?", request.Email).First(&user).Error; err == nil {
 		return errors.New("user already exists")
 	}
 

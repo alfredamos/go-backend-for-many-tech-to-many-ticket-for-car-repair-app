@@ -14,8 +14,8 @@ type Customer struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Address   string         `json:"address" validate:"required"`
 	Notes     string         `json:"notes" validate:"required"`
-	Active    bool           `json:"active" default:"true"`
-	Status    Status         `json:"status" default:"Invalid"`
+	Active    bool           `json:"active" gorm:"default:true"`
+	Status    Status         `gorm:"type:varchar(20);default:'Invalid'" json:"status"`
 
 	UserID  string   `json:"userId" gorm:"unique;not null"`
 	Tickets []Ticket `json:"tickets" gorm:"foreignKey:CustomerID"`

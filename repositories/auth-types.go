@@ -51,6 +51,7 @@ type UserResponse struct {
 	Role   string `json:"role"`
 	Gender string `json:"gender"`
 	Image  string `json:"image"`
+	Type   models.UserType
 }
 
 type TokenParam struct {
@@ -68,6 +69,7 @@ func ToUserResponse(user *models.User) *UserResponse {
 		Role:   string(user.Role),
 		Gender: string(user.Gender),
 		Image:  user.Image,
+		Type:   user.Type,
 	}
 }
 

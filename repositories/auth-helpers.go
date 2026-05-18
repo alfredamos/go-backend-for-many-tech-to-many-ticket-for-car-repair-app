@@ -40,8 +40,11 @@ func hashPassword(rawPassword string) (string, error) {
 }
 
 func getUserByEmail(u UserAuthRepoImpl, email string) (models.User, error) {
+	//----> Initialize user.
 	user := new(models.User)
-	if err := u.DB.First(&user, "email = ?", email).Error; err != nil {
+
+	//----> Fetch user by email.
+	if err := u.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return models.User{}, errors.New(err.Error())
 	}
 
