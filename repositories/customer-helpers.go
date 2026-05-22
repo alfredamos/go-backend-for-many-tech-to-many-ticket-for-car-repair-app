@@ -6,6 +6,12 @@ import (
 )
 
 func toCustomerResponse(customer models.Customer) CustomerResponse {
+	//----> Check for existence of user.
+	if customer.User == nil {
+		return CustomerResponse{}
+	}
+
+	//----> Send back response.
 	return CustomerResponse{
 		ID:      customer.ID,
 		Address: customer.Address,
@@ -35,9 +41,20 @@ func getOneCustomerById(id string, u *CustomerRepositoryImpl) (*models.Customer,
 }
 
 func toCustomerResponseList(customers []models.Customer) []CustomerResponse {
+	//----> Check for empty customers.
+	if len(customers) == 0 {
+		return []CustomerResponse{}
+	}
+
 	var customerResponses []CustomerResponse
+
+	//----> Iterate through customers.
 	for _, customer := range customers {
-		customerResponses = append(customerResponses, toCustomerResponse(customer))
+
+		if customer.User != nil {
+			customerResponses = append(customerResponses, toCustomerResponse(customer))
+		}
+
 	}
 	return customerResponses
 }

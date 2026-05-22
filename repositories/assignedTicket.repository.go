@@ -139,8 +139,11 @@ func (a *AssignedTicketRepositoryImpl) GetAssignedTicketById(techId, ticketId st
 		return AssignedTicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the assigned-ticket response.
+	assignedTicket := toAssignedTicketResponse(ticket)
+
 	//----> Send back response.
-	return toAssignedTicketResponse(ticket), nil
+	return assignedTicket, nil
 }
 
 func (a *AssignedTicketRepositoryImpl) GetAllAssignedTickets() ([]AssignedTicketResponse, error) {
@@ -152,8 +155,11 @@ func (a *AssignedTicketRepositoryImpl) GetAllAssignedTickets() ([]AssignedTicket
 		return []AssignedTicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the assigned-ticket response.
+	assignedTicketsResp := toAssignedTicketResponseList(assignedTickets)
+
 	//----> Send back response.
-	return toAssignedTicketResponseList(assignedTickets), nil
+	return assignedTicketsResp, nil
 }
 
 func (a *AssignedTicketRepositoryImpl) GetAssignedTicketsByTechId(techId string) ([]AssignedTicketResponse, error) {
@@ -165,8 +171,11 @@ func (a *AssignedTicketRepositoryImpl) GetAssignedTicketsByTechId(techId string)
 		return []AssignedTicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the assigned-ticket response.
+	assignedTicketsResp := toAssignedTicketResponseList(assignedTickets)
+
 	//----> Send back response.
-	return toAssignedTicketResponseList(assignedTickets), nil
+	return assignedTicketsResp, nil
 }
 
 func (a *AssignedTicketRepositoryImpl) GetAssignedTicketsByTicketId(ticketId string) ([]AssignedTicketResponse, error) {
@@ -178,8 +187,11 @@ func (a *AssignedTicketRepositoryImpl) GetAssignedTicketsByTicketId(ticketId str
 		return []AssignedTicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the assigned-ticket response.
+	assignedTicketsResp := toAssignedTicketResponseList(assignedTickets)
+
 	//----> Send back response.
-	return toAssignedTicketResponseList(assignedTickets), nil
+	return assignedTicketsResp, nil
 }
 
 func (a *AssignedTicketRepositoryImpl) GetCompletedAssignedTicket() ([]AssignedTicketResponse, error) {
@@ -191,8 +203,11 @@ func (a *AssignedTicketRepositoryImpl) GetCompletedAssignedTicket() ([]AssignedT
 		return []AssignedTicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the assigned-ticket response.
+	assignedTicketsResp := toAssignedTicketResponseList(assignedTickets)
+
 	//----> Send back response.
-	return toAssignedTicketResponseList(assignedTickets), nil
+	return assignedTicketsResp, nil
 }
 
 func (a *AssignedTicketRepositoryImpl) GetInCompletedAssignedTicket() ([]AssignedTicketResponse, error) {
@@ -204,8 +219,11 @@ func (a *AssignedTicketRepositoryImpl) GetInCompletedAssignedTicket() ([]Assigne
 		return []AssignedTicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the assigned-ticket response.
+	assignedTicketsResp := toAssignedTicketResponseList(assignedTickets)
+
 	//----> Send back response.
-	return toAssignedTicketResponseList(assignedTickets), nil
+	return assignedTicketsResp, nil
 }
 
 func changeStatus(completed bool) models.TicketStatus {

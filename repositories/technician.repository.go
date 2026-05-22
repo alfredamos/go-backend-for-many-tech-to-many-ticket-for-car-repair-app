@@ -103,8 +103,11 @@ func (t *TechnicianRepositoryImpl) GetTechnicianById(id string) (TechnicianRespo
 		return TechnicianResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the technician response.
+	technicianResp := toTechnicianResponse(*technician)
+
 	//----> Send back response.
-	return toTechnicianResponse(*technician), nil
+	return technicianResp, nil
 }
 
 func (t *TechnicianRepositoryImpl) GetAllTechnicians() ([]TechnicianResponse, error) {
@@ -116,8 +119,11 @@ func (t *TechnicianRepositoryImpl) GetAllTechnicians() ([]TechnicianResponse, er
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the technician response.
+	techniciansResp := toTechnicianResponseList(technicians)
+
 	//----> Send back response.
-	return toTechnicianResponseList(technicians), nil
+	return techniciansResp, nil
 }
 
 func (t *TechnicianRepositoryImpl) GetTechnicianBySpecialty(specialty string) ([]TechnicianResponse, error) {
@@ -129,8 +135,11 @@ func (t *TechnicianRepositoryImpl) GetTechnicianBySpecialty(specialty string) ([
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the technician response.
+	techniciansResp := toTechnicianResponseList(technicians)
+
 	//----> Send back response.
-	return toTechnicianResponseList(technicians), nil
+	return techniciansResp, nil
 }
 
 func (t *TechnicianRepositoryImpl) GetTechnicianByUserId(userId string) (TechnicianResponse, error) {
@@ -142,6 +151,9 @@ func (t *TechnicianRepositoryImpl) GetTechnicianByUserId(userId string) (Technic
 		return TechnicianResponse{}, errors.New(err.Error())
 	}
 
-	//-----> Send back response.
-	return toTechnicianResponse(technician), nil
+	//----> Get the technician response.
+	technicianResp := toTechnicianResponse(technician)
+
+	//----> Send back response.
+	return technicianResp, nil
 }

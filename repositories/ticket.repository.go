@@ -105,8 +105,11 @@ func (t *TicketRepositoryImpl) GetTicketById(id string) (TicketResponse, error) 
 		return TicketResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the ticket response.
+	ticketResp := toTicketResponse(*ticket)
+
 	//----> Send back response.
-	return toTicketResponse(*ticket), nil
+	return ticketResp, nil
 
 }
 
@@ -117,8 +120,11 @@ func (t *TicketRepositoryImpl) GetAllTickets() ([]TicketResponse, error) {
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the ticket response.
+	ticketsResp := ToTicketResponseList(tickets)
+
 	//----> Send back response.
-	return ToTicketResponseList(tickets), nil
+	return ticketsResp, nil
 }
 
 func (t *TicketRepositoryImpl) GetTicketByCustomerId(customerId string) ([]TicketResponse, error) {
@@ -128,6 +134,9 @@ func (t *TicketRepositoryImpl) GetTicketByCustomerId(customerId string) ([]Ticke
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the ticket response.
+	ticketsResp := ToTicketResponseList(tickets)
+
 	//----> Send back response.
-	return ToTicketResponseList(tickets), nil
+	return ticketsResp, nil
 }

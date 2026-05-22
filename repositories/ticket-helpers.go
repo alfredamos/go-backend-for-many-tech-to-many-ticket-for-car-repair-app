@@ -6,6 +6,12 @@ import (
 )
 
 func toTicketResponse(ticket models.Ticket) TicketResponse {
+	//----> Check for existence of customer.
+	if ticket.Customer == nil {
+		return TicketResponse{}
+	}
+
+	//----> Send back response.
 	return TicketResponse{
 		ID:            ticket.ID,
 		Title:         ticket.Title,
@@ -21,10 +27,19 @@ func toTicketResponse(ticket models.Ticket) TicketResponse {
 }
 
 func ToTicketResponseList(tickets []models.Ticket) []TicketResponse {
+	//----> Check for empty tickets.
+	if len(tickets) == 0 {
+		return []TicketResponse{}
+	}
+
 	var ticketResponses []TicketResponse
 
+	//----> Check for empty tickets.
 	for _, ticket := range tickets {
-		ticketResponses = append(ticketResponses, toTicketResponse(ticket))
+		if ticket.Customer != nil {
+			ticketResponses = append(ticketResponses, toTicketResponse(ticket))
+		}
+
 	}
 	return ticketResponses
 }

@@ -6,6 +6,12 @@ import (
 )
 
 func toAssignedTicketResponse(ticket models.AssignedTicket) AssignedTicketResponse {
+	//----> Check for existence of ticket and technician.
+	if ticket.Ticket.Customer == nil || ticket.Technician.User == nil {
+		return AssignedTicketResponse{}
+	}
+
+	//----> Send back response.
 	return AssignedTicketResponse{
 		TechID:          ticket.TechnicianID,
 		TicketID:        ticket.TicketID,
@@ -29,9 +35,19 @@ func toAssignedTicketResponse(ticket models.AssignedTicket) AssignedTicketRespon
 }
 
 func toAssignedTicketResponseList(tickets []models.AssignedTicket) []AssignedTicketResponse {
+	//----> Check for empty tickets.
+	if len(tickets) == 0 {
+		return []AssignedTicketResponse{}
+	}
+
 	var assignedTicketResponses []AssignedTicketResponse
 	for _, ticket := range tickets {
-		assignedTicketResponses = append(assignedTicketResponses, toAssignedTicketResponse(ticket))
+
+		//----> Check for existence of ticket and technician.
+		if ticket.Ticket.Customer != nil && ticket.Technician.User != nil {
+			assignedTicketResponses = append(assignedTicketResponses, toAssignedTicketResponse(ticket))
+		}
+
 	}
 	return assignedTicketResponses
 }

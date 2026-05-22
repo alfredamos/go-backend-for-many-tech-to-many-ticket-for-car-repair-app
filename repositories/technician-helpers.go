@@ -5,6 +5,12 @@ import (
 )
 
 func toTechnicianResponse(Tech models.Technician) TechnicianResponse {
+	//----> Check for existence of user.
+	if Tech.User == nil {
+		return TechnicianResponse{}
+	}
+
+	//----> Send back response.
 	return TechnicianResponse{
 		ID:        Tech.ID,
 		Specialty: Tech.Specialty,
@@ -31,9 +37,19 @@ func getOneTechnicianById(id string, u *TechnicianRepositoryImpl) (*models.Techn
 }
 
 func toTechnicianResponseList(technicians []models.Technician) []TechnicianResponse {
+	//----> Check for empty technicians.
+	if len(technicians) == 0 {
+		return []TechnicianResponse{}
+	}
+
 	var technicianResponses []TechnicianResponse
+
+	//----> Iterate through technicians.
 	for _, technician := range technicians {
-		technicianResponses = append(technicianResponses, toTechnicianResponse(technician))
+		if technician.User != nil {
+			technicianResponses = append(technicianResponses, toTechnicianResponse(technician))
+		}
+
 	}
 	return technicianResponses
 }

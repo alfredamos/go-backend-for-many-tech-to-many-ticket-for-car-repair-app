@@ -138,8 +138,11 @@ func (c *CustomerRepositoryImpl) GetCustomerById(id string) (CustomerResponse, e
 		return CustomerResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the customer response.
+	customerResp := toCustomerResponse(*customer)
+
 	//----> Send back response.
-	return toCustomerResponse(*customer), nil
+	return customerResp, nil
 }
 
 func (c *CustomerRepositoryImpl) GetActiveCustomers() ([]CustomerResponse, error) {
@@ -149,8 +152,11 @@ func (c *CustomerRepositoryImpl) GetActiveCustomers() ([]CustomerResponse, error
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the customer response.
+	customersResp := toCustomerResponseList(customers)
+
 	//----> Send back response.
-	return toCustomerResponseList(customers), nil
+	return customersResp, nil
 }
 
 func (c *CustomerRepositoryImpl) GetAllCustomers() ([]CustomerResponse, error) {
@@ -160,8 +166,11 @@ func (c *CustomerRepositoryImpl) GetAllCustomers() ([]CustomerResponse, error) {
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the customer response.
+	customersResp := toCustomerResponseList(customers)
+
 	//----> Send back response.
-	return toCustomerResponseList(customers), nil
+	return customersResp, nil
 }
 
 func (c *CustomerRepositoryImpl) GetCustomerByUserId(userId string) (CustomerResponse, error) {
@@ -173,8 +182,11 @@ func (c *CustomerRepositoryImpl) GetCustomerByUserId(userId string) (CustomerRes
 		return CustomerResponse{}, errors.New(err.Error())
 	}
 
+	//----> Get the customer response.
+	customerResp := toCustomerResponse(customer)
+
 	//----> Send back response.
-	return toCustomerResponse(customer), nil
+	return customerResp, nil
 }
 
 func (c *CustomerRepositoryImpl) GetInactiveCustomers() ([]CustomerResponse, error) {
@@ -184,6 +196,9 @@ func (c *CustomerRepositoryImpl) GetInactiveCustomers() ([]CustomerResponse, err
 		return nil, errors.New(err.Error())
 	}
 
+	//----> Get the customer response.
+	customersResp := toCustomerResponseList(*customers)
+
 	//----> Send back response.
-	return toCustomerResponseList(*customers), nil
+	return customersResp, nil
 }
