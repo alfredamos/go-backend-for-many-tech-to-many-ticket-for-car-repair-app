@@ -33,15 +33,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//----> Initialize auth repository
-	authRepo := repositories.NewUserAuthRepoImpl(DB)
-
-	//----> Initialize auth service.
-	authService := services.NewAuthServiceImpl(authRepo)
-
-	//----> Initialize auth controller.
-	authController := controllers.NewAuthController(authService)
-
 	//----> Initialize fiber app.
 	app := fiber.New()
 
@@ -55,7 +46,7 @@ func main() {
 
 	//----> Auth routes.
 	authRoutes := app.Group("/api/auth")
-	routes.AuthRoute(authRoutes, authController)
+	routes.AuthRoute(authRoutes, DB)
 
 	//----> Initialize assigned-ticket repository.
 	assignedTicketRepo := repositories.NewAssignedTicketRepositoryImpl(DB)
