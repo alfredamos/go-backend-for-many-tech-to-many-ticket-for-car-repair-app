@@ -20,10 +20,10 @@ type CustomerServiceInt interface {
 }
 
 type CustomerServiceImpl struct {
-	repo repositories.CustomerRepositoryImpl
+	repo *repositories.CustomerRepositoryImpl
 }
 
-func NewCustomerServiceImpl(repo repositories.CustomerRepositoryImpl) *CustomerServiceImpl {
+func NewCustomerServiceImpl(repo *repositories.CustomerRepositoryImpl) *CustomerServiceImpl {
 	return &CustomerServiceImpl{repo: repo}
 }
 

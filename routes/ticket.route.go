@@ -16,6 +16,6 @@ func TicketRoute(router fiber.Router, controller *controllers.TicketControllerIm
 	adminTicketRoute.Patch("/:id", controller.EditTicketByIdController)
 	adminTicketRoute.Get("/", controller.GetAllTicketsController)
 	adminTicketRoute.Get("/:id", controller.GetTicketByIdController)
-	adminTicketRoute.Get("/customer/:customerId", controller.GetTicketsByCustomerIdController)
+	adminTicketRoute.Get("/by-customer-id/:customerId", controller.GetTicketsByCustomerIdController)
 
 }

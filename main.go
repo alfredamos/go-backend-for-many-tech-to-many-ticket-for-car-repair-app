@@ -37,10 +37,10 @@ func main() {
 	authRepo := repositories.NewUserAuthRepoImpl(DB)
 
 	//----> Initialize auth service.
-	authService := services.NewAuthServiceImpl(*authRepo)
+	authService := services.NewAuthServiceImpl(authRepo)
 
 	//----> Initialize auth controller.
-	authController := controllers.NewAuthController(*authService)
+	authController := controllers.NewAuthController(authService)
 
 	//----> Initialize fiber app.
 	app := fiber.New()
@@ -57,16 +57,27 @@ func main() {
 	authRoutes := app.Group("/api/auth")
 	routes.AuthRoute(authRoutes, authController)
 
+	//----> Initialize assigned-ticket repository.
+	assignedTicketRepo := repositories.NewAssignedTicketRepositoryImpl(DB)
+
+	//----> Initialize assigned-ticket service.
+	assignedTicketService := services.NewAssignedTicketServiceImpl(assignedTicketRepo)
+
+	//----> Initialize assigned-ticket controller.
+	assignedTicketController := controllers.NewAssignedTicketControllerImpl(assignedTicketService)
+
 	//----> Assigned-ticket routes.
+	assignedTicketRoutes := app.Group("/api/assign-tickets")
+	routes.AssignedTicketRoute(assignedTicketRoutes, assignedTicketController)
 
 	//----> Initialize customer repository.
 	customerRepo := repositories.NewCustomerRepositoryImpl(DB)
 
 	//----> Initialize customer service.
-	customerService := services.NewCustomerServiceImpl(*customerRepo)
+	customerService := services.NewCustomerServiceImpl(customerRepo)
 
 	//----> Initialize customer controller.
-	ca := controllers.NewCustomerControllerImpl(*customerService)
+	ca := controllers.NewCustomerControllerImpl(customerService)
 
 	//----> Customer routes.
 	CustomerRoutes := app.Group("/api/customers")
@@ -76,7 +87,7 @@ func main() {
 	technicianRepo := repositories.NewTechnicianRepositoryImpl(DB)
 
 	//----> Initialize technician service.
-	technicianService := services.NewTechnicianServiceImpl(*technicianRepo)
+	technicianService := services.NewTechnicianServiceImpl(technicianRepo)
 
 	//----> Initialize technician controller.
 	technicianController := controllers.NewTechnicianControllerImpl(technicianService)
@@ -102,10 +113,10 @@ func main() {
 	tokenRepo := repositories.NewTokenRepositoryImpl(DB)
 
 	//----> Initialize token service.
-	tokenService := services.NewTokenServiceImpl(*tokenRepo)
+	tokenService := services.NewTokenServiceImpl(tokenRepo)
 
 	//----> Initialize token controller.
-	tokenController := controllers.NewTokenControllerImpl(*tokenService)
+	tokenController := controllers.NewTokenControllerImpl(tokenService)
 
 	//----> Token routes.
 	tokenRoutes := app.Group("/api/tokens")
@@ -115,10 +126,10 @@ func main() {
 	userRepo := repositories.NewUserRepositoryImpl(DB)
 
 	//----> Initialize user service.
-	userService := services.NewUserServiceImpl(*userRepo)
+	userService := services.NewUserServiceImpl(userRepo)
 
 	//----> Initialize user controller.
-	UserController := controllers.NewUserControllerImpl(*userService)
+	UserController := controllers.NewUserControllerImpl(userService)
 
 	//----> User routes.
 	userRoutes := app.Group("/api/users")

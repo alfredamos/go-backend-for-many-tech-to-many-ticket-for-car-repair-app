@@ -8,9 +8,9 @@ import (
 )
 
 type TechnicianRepositoryInt interface {
-	CreateTechnician(technicianCreate *models.TechnicianCreate) (TechnicianResponse, error)
-	DeleteTechnicianById(id string) (TechnicianResponse, error)
-	EditTechnicianById(id string, technicianEdit *models.TechnicianEdit) (TechnicianResponse, error)
+	CreateTechnician(technicianCreate *models.TechnicianCreate) (ResponseMessage, error)
+	DeleteTechnicianById(id string) (ResponseMessage, error)
+	EditTechnicianById(id string, technicianEdit *models.TechnicianEdit) (ResponseMessage, error)
 	GetTechnicianById(id string) (TechnicianResponse, error)
 	GetAllTechnicians() ([]TechnicianResponse, error)
 	GetTechnicianByUserId(userId string) (TechnicianResponse, error)
@@ -25,97 +25,73 @@ func NewTechnicianRepositoryImpl(DB *gorm.DB) *TechnicianRepositoryImpl {
 	return &TechnicianRepositoryImpl{DB: DB}
 }
 
-func (t *TechnicianRepositoryImpl) CreateTechnician(technicianCreate *models.TechnicianCreate) (TechnicianResponse, error) {
+func (t *TechnicianRepositoryImpl) CreateTechnician(technicianCreate *models.TechnicianCreate) (ResponseMessage, error) {
 	//----> Validate input.
 	if err := models.ValidateTechnicianCreate(technicianCreate); err != nil {
-		return TechnicianResponse{}, err
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Initialize technician.
-	technician := &models.Technician{
+	technician := models.Technician{
 		UserID:    technicianCreate.UserID,
 		Specialty: technicianCreate.Specialty,
 	}
 
 	//----> Create technician.
 	if err := t.DB.Create(&technician).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
-	}
-
-	//----> Initialize user
-	user := &models.User{}
-
-	//----> Preload user.
-	if err := t.DB.Where("id = ?", technicianCreate.UserID).First(user).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTechnicianResponse(*technician, user), nil
+	return NewResponseMessage("Technician created successfully", 201, "Success"), nil
 }
 
-func (t *TechnicianRepositoryImpl) DeleteTechnicianById(id string) (TechnicianResponse, error) {
+func (t *TechnicianRepositoryImpl) DeleteTechnicianById(id string) (ResponseMessage, error) {
 	//----> Check for existence of technician.
 	technician, err := getOneTechnicianById(id, t)
 
 	//----> Check for error.
 	if err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Delete technician.
 	if err := t.DB.Delete(technician).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
-	}
-
-	//----> Initialize user
-	user := &models.User{}
-
-	//----> Preload user.
-	if err := t.DB.Where("id = ?", technician.UserID).First(user).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTechnicianResponse(*technician, user), nil
+	return NewResponseMessage("Technician deleted successfully", 200, "Success"), nil
 }
 
-func (t *TechnicianRepositoryImpl) EditTechnicianById(id string, technicianEdit *models.TechnicianEdit) (TechnicianResponse, error) {
+func (t *TechnicianRepositoryImpl) EditTechnicianById(id string, technicianEdit *models.TechnicianEdit) (ResponseMessage, error) {
 	//----> Check for existence of technician.
-	technician, err := getOneTechnicianById(id, t)
+	_, err := getOneTechnicianById(id, t)
 
 	//----> Check for error.
 	if err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Validate input.
 	if err := models.ValidateTechnicianEdit(technicianEdit); err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Initialize and populate technician.
-	technicianToEdit := &models.Technician{
-		ID:        technician.ID,
-		UserID:    technician.UserID,
+	technician := models.Technician{
+		ID:        id,
+		UserID:    technicianEdit.UserID,
 		Specialty: technicianEdit.Specialty,
 	}
 
 	//----> Update technician.
-	if err := t.DB.Model(&technician).Where("id = ?", id).Updates(technicianToEdit).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
-	}
-
-	//----> Initialize user
-	user := &models.User{}
-
-	//----> Preload user.
-	if err := t.DB.Where("id = ?", technician.UserID).First(user).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
+	if err := t.DB.Updates(&technician).Error; err != nil {
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTechnicianResponse(*technician, user), nil
+	return NewResponseMessage("Technician updated successfully", 200, "Success"), nil
 }
 
 func (t *TechnicianRepositoryImpl) GetTechnicianById(id string) (TechnicianResponse, error) {
@@ -127,16 +103,8 @@ func (t *TechnicianRepositoryImpl) GetTechnicianById(id string) (TechnicianRespo
 		return TechnicianResponse{}, errors.New(err.Error())
 	}
 
-	//----> Initialize user
-	user := &models.User{}
-
-	//----> Preload user.
-	if err := t.DB.Where("id = ?", technician.UserID).First(user).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
-	}
-
 	//----> Send back response.
-	return toTechnicianResponse(*technician, user), nil
+	return toTechnicianResponse(*technician), nil
 }
 
 func (t *TechnicianRepositoryImpl) GetAllTechnicians() ([]TechnicianResponse, error) {
@@ -144,12 +112,12 @@ func (t *TechnicianRepositoryImpl) GetAllTechnicians() ([]TechnicianResponse, er
 	var technicians []models.Technician
 
 	//----> Fetch all technicians.
-	if err := t.DB.Find(&technicians).Error; err != nil {
+	if err := t.DB.Preload("User").Find(&technicians).Error; err != nil {
 		return nil, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTechnicianResponseList(technicians, t), nil
+	return toTechnicianResponseList(technicians), nil
 }
 
 func (t *TechnicianRepositoryImpl) GetTechnicianBySpecialty(specialty string) ([]TechnicianResponse, error) {
@@ -157,12 +125,12 @@ func (t *TechnicianRepositoryImpl) GetTechnicianBySpecialty(specialty string) ([
 	var technicians []models.Technician
 
 	//----> Fetch all technicians.
-	if err := t.DB.Where("specialty = ?", specialty).Find(&technicians).Error; err != nil {
+	if err := t.DB.Preload("User").Where("specialty = ?", specialty).Find(&technicians).Error; err != nil {
 		return nil, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTechnicianResponseList(technicians, t), nil
+	return toTechnicianResponseList(technicians), nil
 }
 
 func (t *TechnicianRepositoryImpl) GetTechnicianByUserId(userId string) (TechnicianResponse, error) {
@@ -170,18 +138,10 @@ func (t *TechnicianRepositoryImpl) GetTechnicianByUserId(userId string) (Technic
 	technician := models.Technician{}
 
 	//----> Fetch technician by user id.
-	if err := t.DB.Where("user_id = ?", userId).First(&technician).Error; err != nil {
-		return TechnicianResponse{}, errors.New(err.Error())
-	}
-
-	//----> Initialize user.
-	user := &models.User{}
-
-	//----> Preload user.
-	if err := t.DB.Where("id = ?", technician.UserID).First(user).Error; err != nil {
+	if err := t.DB.Preload("User").Where("user_id = ?", userId).First(&technician).Error; err != nil {
 		return TechnicianResponse{}, errors.New(err.Error())
 	}
 
 	//-----> Send back response.
-	return toTechnicianResponse(technician, user), nil
+	return toTechnicianResponse(technician), nil
 }

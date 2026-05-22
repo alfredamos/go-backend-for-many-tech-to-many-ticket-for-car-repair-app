@@ -12,10 +12,10 @@ type TokenService interface {
 }
 
 type TokenServiceImpl struct {
-	repo repositories.TokenRepositoryImpl
+	repo *repositories.TokenRepositoryImpl
 }
 
-func NewTokenServiceImpl(repo repositories.TokenRepositoryImpl) *TokenServiceImpl {
+func NewTokenServiceImpl(repo *repositories.TokenRepositoryImpl) *TokenServiceImpl {
 	return &TokenServiceImpl{repo: repo}
 }
 

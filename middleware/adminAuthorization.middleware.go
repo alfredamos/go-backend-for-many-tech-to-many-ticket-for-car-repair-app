@@ -12,7 +12,7 @@ func AdminRolePermission(ctx *fiber.Ctx) error {
 	session, err := GetSession(ctx)
 
 	if err != nil {
-		return errors.New(err.Error())
+		return ctx.Status(fiber.StatusUnauthorized).JSON(errors.New(err.Error()))
 	}
 
 	//----> Check for admin privilege.

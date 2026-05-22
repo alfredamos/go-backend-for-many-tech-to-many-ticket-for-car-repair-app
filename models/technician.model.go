@@ -13,6 +13,7 @@ type Technician struct {
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	UserID    string         `json:"user_id" gorm:"unique;type:varchar(255)"`
+	User      *User          `json:"user" gorm:"foreignKey:UserID"`
 	Specialty string         `json:"specialty"`
 
 	Tickets []Ticket `gorm:"many2many:assignedTickets;"`

@@ -16,7 +16,8 @@ type Ticket struct {
 
 	Technicians []Technician `gorm:"many2many:assignedTickets;"`
 
-	CustomerID string `json:"customerId"`
+	CustomerID string    `json:"customerId"`
+	Customer   *Customer `json:"customer" gorm:"foreignKey:CustomerID"`
 }
 
 // BeforeCreate These functions are called before creating any Post

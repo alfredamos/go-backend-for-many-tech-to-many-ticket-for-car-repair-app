@@ -19,10 +19,10 @@ type CustomerControllerInt interface {
 }
 
 type CustomerControllerImpl struct {
-	service services.CustomerServiceImpl
+	service *services.CustomerServiceImpl
 }
 
-func NewCustomerControllerImpl(service services.CustomerServiceImpl) *CustomerControllerImpl {
+func NewCustomerControllerImpl(service *services.CustomerServiceImpl) *CustomerControllerImpl {
 	return &CustomerControllerImpl{service: service}
 }
 

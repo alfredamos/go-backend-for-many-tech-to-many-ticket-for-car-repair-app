@@ -14,10 +14,10 @@ type UserControllerInt interface {
 }
 
 type UserControllerImpl struct {
-	service services.UserServiceImpl
+	service *services.UserServiceImpl
 }
 
-func NewUserControllerImpl(service services.UserServiceImpl) *UserControllerImpl {
+func NewUserControllerImpl(service *services.UserServiceImpl) *UserControllerImpl {
 	return &UserControllerImpl{service: service}
 }
 

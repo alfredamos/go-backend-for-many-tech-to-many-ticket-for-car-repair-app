@@ -12,10 +12,10 @@ type TokenControllerInt interface {
 }
 
 type TokenControllerImpl struct {
-	service services.TokenServiceImpl
+	service *services.TokenServiceImpl
 }
 
-func NewTokenControllerImpl(service services.TokenServiceImpl) *TokenControllerImpl {
+func NewTokenControllerImpl(service *services.TokenServiceImpl) *TokenControllerImpl {
 	return &TokenControllerImpl{service: service}
 }
 

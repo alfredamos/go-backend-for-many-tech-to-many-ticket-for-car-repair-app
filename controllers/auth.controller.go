@@ -19,10 +19,10 @@ type AuthControllerInt interface {
 }
 
 type AuthControllerImpl struct {
-	service services.AuthServiceImpl
+	service *services.AuthServiceImpl
 }
 
-func NewAuthController(service services.AuthServiceImpl) *AuthControllerImpl {
+func NewAuthController(service *services.AuthServiceImpl) *AuthControllerImpl {
 	return &AuthControllerImpl{service: service}
 }
 

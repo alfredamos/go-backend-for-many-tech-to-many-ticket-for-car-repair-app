@@ -18,10 +18,10 @@ type TechnicianServiceInt interface {
 }
 
 type TechnicianServiceImpl struct {
-	service repositories.TechnicianRepositoryImpl
+	service *repositories.TechnicianRepositoryImpl
 }
 
-func NewTechnicianServiceImpl(service repositories.TechnicianRepositoryImpl) *TechnicianServiceImpl {
+func NewTechnicianServiceImpl(service *repositories.TechnicianRepositoryImpl) *TechnicianServiceImpl {
 	return &TechnicianServiceImpl{service: service}
 }
 

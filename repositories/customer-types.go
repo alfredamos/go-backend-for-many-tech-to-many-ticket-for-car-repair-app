@@ -2,6 +2,12 @@ package repositories
 
 import "go-backend-for-many-tech-to-many-ticket-for-car-repair-app/models"
 
+type CustomerQueryCondition struct {
+	Active bool
+	Status models.Status
+	UserId string
+}
+
 type CustomerResponse struct {
 	ID      string        `json:"id"`
 	Address string        `json:"address"`

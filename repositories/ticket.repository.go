@@ -8,9 +8,9 @@ import (
 )
 
 type TicketRepositoryInt interface {
-	CreateTicket(ticketCreate *models.TicketCreate) (TicketResponse, error)
-	DeleteTicketById(id string) (TicketResponse, error)
-	EditTicketById(id string, ticketEdit *models.TicketEdit) (TicketResponse, error)
+	CreateTicket(ticketCreate *models.TicketCreate) (ResponseMessage, error)
+	DeleteTicketById(id string) (ResponseMessage, error)
+	EditTicketById(id string, ticketEdit *models.TicketEdit) (ResponseMessage, error)
 	GetAllTickets() (TicketResponse, error)
 	GetTicketById(id string) (TicketResponse, error)
 	GetTicketsByCustomerId(customerId string) (TicketResponse, error)
@@ -24,14 +24,14 @@ func NewTicketRepositoryImpl(DB *gorm.DB) *TicketRepositoryImpl {
 	return &TicketRepositoryImpl{DB: DB}
 }
 
-func (t *TicketRepositoryImpl) CreateTicket(ticketCreate *models.TicketCreate) (TicketResponse, error) {
+func (t *TicketRepositoryImpl) CreateTicket(ticketCreate *models.TicketCreate) (ResponseMessage, error) {
 	//----> Validate ticket input.
 	if err := models.ValidateTicketCreate(ticketCreate); err != nil {
-		return TicketResponse{}, err
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Initialize ticket.
-	ticket := &models.Ticket{
+	ticket := models.Ticket{
 		Title:       ticketCreate.Title,
 		Description: ticketCreate.Description,
 		CustomerID:  ticketCreate.CustomerID,
@@ -39,100 +39,61 @@ func (t *TicketRepositoryImpl) CreateTicket(ticketCreate *models.TicketCreate) (
 
 	//----> Create ticket.
 	if err := t.DB.Create(&ticket).Error; err != nil {
-		return TicketResponse{}, err
-	}
-
-	//----> Initialize customer and user
-	customer := &models.Customer{}
-	user := &models.User{}
-
-	//----> Preload customer and user.
-	if err := t.DB.Where("id = ?", ticket.CustomerID).First(customer).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
-	if err := t.DB.Where("id = ?", customer.UserID).First(user).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, err
 	}
 
 	//----> Send back response.
-	return toTicketResponse(*ticket, user), nil
+	return NewResponseMessage("Ticket created successfully!", 201, "Success"), nil
 
 }
 
-func (t *TicketRepositoryImpl) DeleteTicketById(id string) (TicketResponse, error) {
+func (t *TicketRepositoryImpl) DeleteTicketById(id string) (ResponseMessage, error) {
 	//----> Check for existence of ticket.
 	ticket, err := getOneTicketById(id, t)
 
 	//----> Check for error.
 	if err != nil {
-		return TicketResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Delete ticket.
-	if err := t.DB.Delete(&ticket).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
-	//----> Initialize customer and user
-	customer := &models.Customer{}
-	user := &models.User{}
-
-	//----> Preload customer and user.
-	if err := t.DB.Where("id = ?", ticket.CustomerID).First(customer).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
-	if err := t.DB.Where("id = ?", customer.UserID).First(user).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
+	if err := t.DB.Delete(ticket).Error; err != nil {
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTicketResponse(*ticket, user), nil
+	return NewResponseMessage("Ticket deleted successfully!", 200, "Success"), nil
 }
 
-func (t *TicketRepositoryImpl) EditTicketById(id string, ticketEdit *models.TicketEdit) (TicketResponse, error) {
+func (t *TicketRepositoryImpl) EditTicketById(id string, ticketEdit *models.TicketEdit) (ResponseMessage, error) {
 	//----> Check for existence of ticket.
-	ticket, err := getOneTicketById(id, t)
+	_, err := getOneTicketById(id, t)
 
 	//----> Check for error.
 	if err != nil {
-		return TicketResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Validate ticket input.
 	if err := models.ValidateTicketEdit(ticketEdit); err != nil {
-		return TicketResponse{}, errors.New(err.Error())
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Initialize ticket.
-	ticketToEdit := &models.TicketEdit{
-		ID:          ticketEdit.ID,
+	ticket := models.Ticket{
+		ID:          id,
 		Title:       ticketEdit.Title,
 		Description: ticketEdit.Description,
 		CustomerID:  ticketEdit.CustomerID,
 	}
 
 	//----> Update ticket.
-	if err := t.DB.Model(ticketEdit).Where("id = ?", id).Updates(ticketToEdit).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
-	//----> Initialize customer and user
-	customer := &models.Customer{}
-	user := &models.User{}
-
-	//----> Preload customer and user.
-	if err := t.DB.Where("id = ?", ticket.CustomerID).First(customer).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
-	if err := t.DB.Where("id = ?", customer.UserID).First(user).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
+	if err := t.DB.Updates(&ticket).Error; err != nil {
+		return ResponseMessage{}, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return toTicketResponse(*ticket, user), nil
+	return NewResponseMessage("Ticket updated successfully!", 200, "Success"), nil
 }
 
 func (t *TicketRepositoryImpl) GetTicketById(id string) (TicketResponse, error) {
@@ -144,42 +105,29 @@ func (t *TicketRepositoryImpl) GetTicketById(id string) (TicketResponse, error) 
 		return TicketResponse{}, errors.New(err.Error())
 	}
 
-	//----> Initialize customer and user
-	customer := &models.Customer{}
-	user := &models.User{}
-
-	//----> Preload customer and user.
-	if err := t.DB.Where("id = ?", ticket.CustomerID).First(customer).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
-	if err := t.DB.Where("id = ?", customer.UserID).First(user).Error; err != nil {
-		return TicketResponse{}, errors.New(err.Error())
-	}
-
 	//----> Send back response.
-	return toTicketResponse(*ticket, user), nil
+	return toTicketResponse(*ticket), nil
 
 }
 
 func (t *TicketRepositoryImpl) GetAllTickets() ([]TicketResponse, error) {
 	//----> Fetch all tickets.
 	var tickets []models.Ticket
-	if err := t.DB.Find(&tickets).Error; err != nil {
+	if err := t.DB.Preload("Customer.User").Find(&tickets).Error; err != nil {
 		return nil, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return ToTicketResponseList(tickets, t), nil
+	return ToTicketResponseList(tickets), nil
 }
 
 func (t *TicketRepositoryImpl) GetTicketByCustomerId(customerId string) ([]TicketResponse, error) {
 	//----> Fetch all tickets.
 	var tickets []models.Ticket
-	if err := t.DB.Where("customer_id = ?", customerId).Find(&tickets).Error; err != nil {
+	if err := t.DB.Preload("Customer.User").Where("customer_id = ?", customerId).Find(&tickets).Error; err != nil {
 		return nil, errors.New(err.Error())
 	}
 
 	//----> Send back response.
-	return ToTicketResponseList(tickets, t), nil
+	return ToTicketResponseList(tickets), nil
 }

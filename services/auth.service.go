@@ -20,10 +20,10 @@ type AuthServiceInt interface {
 }
 
 type AuthServiceImpl struct {
-	repo repositories.UserAuthRepoImpl
+	repo *repositories.UserAuthRepoImpl
 }
 
-func NewAuthServiceImpl(repo repositories.UserAuthRepoImpl) *AuthServiceImpl {
+func NewAuthServiceImpl(repo *repositories.UserAuthRepoImpl) *AuthServiceImpl {
 	return &AuthServiceImpl{repo: repo}
 }
 

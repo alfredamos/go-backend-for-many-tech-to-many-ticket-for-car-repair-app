@@ -1,6 +1,10 @@
 package middleware
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"errors"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func OwnerByUserIdOrAdmin(ctx *fiber.Ctx) error {
 	//----> Get user id from request.
@@ -11,14 +15,15 @@ func OwnerByUserIdOrAdmin(ctx *fiber.Ctx) error {
 
 	//----> Check for error in getting session.
 	if err != nil {
-		return err
+		return ctx.Status(fiber.StatusUnauthorized).JSON(errors.New(err.Error()))
 	}
 
 	//----> Check for owner or admin privilege.
-	if isOwner(userId, session.UserId) || session.IsAdmin {
-		return nil
+	if !isOwner(userId, session.UserId) && !session.IsAdmin {
+		return ctx.Status(fiber.StatusForbidden).JSON(fiber.Map{"message": "You are not permitted to access this page"})
 	}
 
-	//----> Not owner and not admin.
-	return ctx.Status(fiber.StatusForbidden).JSON(fiber.Map{"message": "You are not permitted to access this page"})
+	//----> Owner and admin.
+	return ctx.Next()
+
 }
