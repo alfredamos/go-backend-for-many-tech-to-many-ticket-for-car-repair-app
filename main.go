@@ -2,13 +2,9 @@ package main
 
 import (
 	"fmt"
-	_ "fmt"
-	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/controllers"
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/db"
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/initializers"
-	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/repositories"
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/routes"
-	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/services"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -68,18 +64,9 @@ func main() {
 	tokenRoutes := app.Group("/api/tokens")
 	routes.TokenRoute(tokenRoutes, DB)
 
-	//----> Initialize user repository.
-	userRepo := repositories.NewUserRepositoryImpl(DB)
-
-	//----> Initialize user service.
-	userService := services.NewUserServiceImpl(userRepo)
-
-	//----> Initialize user controller.
-	UserController := controllers.NewUserControllerImpl(userService)
-
 	//----> User routes.
 	userRoutes := app.Group("/api/users")
-	routes.UserRoute(userRoutes, UserController)
+	routes.UserRoute(userRoutes, DB)
 
 	//----> Start server
 	err = app.Listen(":5000")
