@@ -52,31 +52,13 @@ func main() {
 	assignedTicketRoutes := app.Group("/api/assign-tickets")
 	routes.AssignedTicketRoute(assignedTicketRoutes, DB)
 
-	//----> Initialize customer repository.
-	customerRepo := repositories.NewCustomerRepositoryImpl(DB)
-
-	//----> Initialize customer service.
-	customerService := services.NewCustomerServiceImpl(customerRepo)
-
-	//----> Initialize customer controller.
-	ca := controllers.NewCustomerControllerImpl(customerService)
-
 	//----> Customer routes.
 	CustomerRoutes := app.Group("/api/customers")
-	routes.CustomerRoute(CustomerRoutes, ca)
-
-	//----> Initialize technician repository.
-	technicianRepo := repositories.NewTechnicianRepositoryImpl(DB)
-
-	//----> Initialize technician service.
-	technicianService := services.NewTechnicianServiceImpl(technicianRepo)
-
-	//----> Initialize technician controller.
-	technicianController := controllers.NewTechnicianControllerImpl(technicianService)
+	routes.CustomerRoute(CustomerRoutes, DB)
 
 	//----> Technician routes.
 	TechnicianRoutes := app.Group("/api/technicians")
-	routes.TechnicianRoute(TechnicianRoutes, technicianController)
+	routes.TechnicianRoute(TechnicianRoutes, DB)
 
 	//----> Initialize ticket repository.
 	ticketRepo := repositories.NewTicketRepositoryImpl(DB)
