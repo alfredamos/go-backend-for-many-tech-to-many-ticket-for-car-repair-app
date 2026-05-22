@@ -48,18 +48,9 @@ func main() {
 	authRoutes := app.Group("/api/auth")
 	routes.AuthRoute(authRoutes, DB)
 
-	//----> Initialize assigned-ticket repository.
-	assignedTicketRepo := repositories.NewAssignedTicketRepositoryImpl(DB)
-
-	//----> Initialize assigned-ticket service.
-	assignedTicketService := services.NewAssignedTicketServiceImpl(assignedTicketRepo)
-
-	//----> Initialize assigned-ticket controller.
-	assignedTicketController := controllers.NewAssignedTicketControllerImpl(assignedTicketService)
-
 	//----> Assigned-ticket routes.
 	assignedTicketRoutes := app.Group("/api/assign-tickets")
-	routes.AssignedTicketRoute(assignedTicketRoutes, assignedTicketController)
+	routes.AssignedTicketRoute(assignedTicketRoutes, DB)
 
 	//----> Initialize customer repository.
 	customerRepo := repositories.NewCustomerRepositoryImpl(DB)

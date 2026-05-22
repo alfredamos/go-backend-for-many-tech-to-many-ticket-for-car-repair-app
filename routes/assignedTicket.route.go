@@ -3,11 +3,24 @@ package routes
 import (
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/controllers"
 	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/middleware"
+	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/repositories"
+	"go-backend-for-many-tech-to-many-ticket-for-car-repair-app/services"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
-func AssignedTicketRoute(router fiber.Router, assignedTickController controllers.AssignedTicketControllerInt) {
+func AssignedTicketRoute(router fiber.Router, DB *gorm.DB) {
+
+	//----> Initialize assigned-ticket repository.
+	assignedTicketRepo := repositories.NewAssignedTicketRepositoryImpl(DB)
+
+	//----> Initialize assigned-ticket service.
+	assignedTicketService := services.NewAssignedTicketServiceImpl(assignedTicketRepo)
+
+	//----> Initialize assigned-ticket controller.
+	assignedTickController := controllers.NewAssignedTicketControllerImpl(assignedTicketService)
+
 	//----> Admin routes.
 	adminAssignedTicketRoute := router.Use(middleware.VerifyTokenJwt, middleware.AdminRolePermission)
 
