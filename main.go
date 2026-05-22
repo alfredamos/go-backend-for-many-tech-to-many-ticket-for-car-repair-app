@@ -60,31 +60,13 @@ func main() {
 	TechnicianRoutes := app.Group("/api/technicians")
 	routes.TechnicianRoute(TechnicianRoutes, DB)
 
-	//----> Initialize ticket repository.
-	ticketRepo := repositories.NewTicketRepositoryImpl(DB)
-
-	//----> Initialize ticket service.
-	ticketService := services.NewTicketServiceImpl(ticketRepo)
-
-	//----> Initialize ticket controller.
-	ticketController := controllers.NewTicketControllerImpl(ticketService)
-
 	//----> Ticket routes.
 	ticketRoutes := app.Group("/api/tickets")
-	routes.TicketRoute(ticketRoutes, ticketController)
-
-	//----> Initialize token repository.
-	tokenRepo := repositories.NewTokenRepositoryImpl(DB)
-
-	//----> Initialize token service.
-	tokenService := services.NewTokenServiceImpl(tokenRepo)
-
-	//----> Initialize token controller.
-	tokenController := controllers.NewTokenControllerImpl(tokenService)
+	routes.TicketRoute(ticketRoutes, DB)
 
 	//----> Token routes.
 	tokenRoutes := app.Group("/api/tokens")
-	routes.TokenRoute(tokenRoutes, tokenController)
+	routes.TokenRoute(tokenRoutes, DB)
 
 	//----> Initialize user repository.
 	userRepo := repositories.NewUserRepositoryImpl(DB)
